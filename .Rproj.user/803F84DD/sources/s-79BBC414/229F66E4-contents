@@ -1,0 +1,57 @@
+install.packages(c("dbplyr", "RSQLite"))
+
+dir.create("data", showWarnings = FALSE)
+download.file(url = "https://ndownloader.figshare.com/files/2292171",
+              destfile = "data/portal_mammals.sqlite", mode = "wb")
+
+library(dplyr)
+library(dbplyr)
+
+mammals <- DBI::dbConnect(RSQLite::SQLite(), "data/portal_mammals.sqlite")
+
+src_dbi(mammals)
+
+tbl(mammals, sql("mammals")) %>% collect()
+
+tbl(mammals, sql("SELECT year,weight AS wei FROM surveys 
+                 JOIN species ON surveys.species_id=species.species_id 
+                 ORDER BY year DESC ")) %>% collect()
+
+tbl(mammals, sql("SELECT spec,AVG(weight) FROM (SELECT year,weight,species_id AS spec FROM surveys 
+                 JOIN species USING (species_id) 
+                 ORDER BY weight DESC) GROUP BY year,spec")) %>% collect()
+
+tbl(mammals, sql("SELECT year,MAX(weight),species_id AS spec FROM surveys 
+                 LEFT JOIN species USING (species_id) 
+                 WHERE species_id LIKE '%A' 
+                 GROUP BY year 
+                 ORDER BY weight DESC ")) %>% collect()
+
+tbl(mammals, sql("SELECT year,weight w,weight*weight  ww,species_id spec FROM surveys s 
+                 WHERE weight IS NOT NULL")) %>% collect()
+
+ss=surveys %>% left_join(species) %>% group_by(month) %>% summarise(day_avg=mean(day))
+ss
+show_query(ss)
+
+tbl(mammals, "species")
+
+
+
+sql1 <- "update sqlJoinMammalsCount set `order`='Primates' where species='Dromiciops gliroides'"
+
+
+sqlJoinMammalsCount <- sqldf(c("delete from sqlJoinMammalsCount where `order`='Dermoptera'", "select * from sqlJoinMammalsCount"))
+
+
+db <- DBI::dbConnect(RSQLite::SQLite(), dbname="MM.sqlite")
+
+
+DBI::dbSendQuery(conn = db,
+            "CREATE TABLE Mammal
+(TaxonOrder TEXT,
+species TEXT,
+mass NUMERIC,
+length NUMERIC,
+range NUMERIC,
+litterSize NUMERIC)")

@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1586688284078.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3435803619",
+    "id" : "229F66E4",
+    "lastKnownWriteTime" : 1573425444,
+    "last_content_update" : 1573425444,
+    "path" : "~/Desktop/DataTable/sql.R",
+    "project_path" : "sql.R",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
